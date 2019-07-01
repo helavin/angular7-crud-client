@@ -24,10 +24,12 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-"# angular7-crud-client"
+To get more help on the Angular CLI
+use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
 
 ##…or create a new repository on the command line
+
 echo "# angular7-crud-client" >> README.md
 git init
 git add README.md
@@ -36,5 +38,6 @@ git remote add origin https://github.com/helavin/angular7-crud-client.git
 git push -u origin master
 
 ##…or push an existing repository from the command line
+
 git remote add origin https://github.com/helavin/angular7-crud-client.git
 git push -u origin master
