@@ -3,6 +3,7 @@
 //    }
 // }
 
+// new class
 import { IDataBaseObj } from './idata-base-obj';
 import { TableMap } from '../shared/table-map';
 
