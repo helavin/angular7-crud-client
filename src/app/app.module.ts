@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http'; // +
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ArticleComponent } from './article/article.component';
-import { ArticleService } from './article.service';
+import { ArticleGenericService } from './articleGeneric.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,7 @@ import { ArticleService } from './article.service';
     ReactiveFormsModule,
     AppRoutingModule
   ],
-  providers: [ArticleService],
+  providers: [ArticleGenericService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

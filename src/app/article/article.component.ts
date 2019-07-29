@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { ArticleService } from '../article.service';
+import { ArticleGenericService } from '../articleGeneric.service';
 import { Article } from '../_models/Article';
 
 // import { Observable } from 'rxjs';
@@ -16,7 +16,7 @@ export class ArticleComponent implements OnInit {
   displayDateTime = new Date().toLocaleString();
 
   // Component properties
-  // article: Article;
+  article: Article;
   allArticles: Article[];
   // tslint:disable-next-line:variable-name
   // allArticles_: any;
@@ -32,7 +32,7 @@ export class ArticleComponent implements OnInit {
   });
 
   // Create constructor to get service instance
-  constructor(private articleService: ArticleService) {
+  constructor(private articleService: ArticleGenericService) {
   }
 
   // Create ngOnInit() and and load articles
@@ -68,7 +68,7 @@ export class ArticleComponent implements OnInit {
 
     // Form is valid, now perform create or update
     this.preProcessConfigurations();
-    const article = this.articleForm.value;
+    const articleObjToCreateUpdate = this.articleForm.value;
     if (this.articleIdToUpdate === null) {
       // Generate article id then create article
       this.articleService.read(this.allArticles) // getAllArticles()
@@ -78,11 +78,11 @@ export class ArticleComponent implements OnInit {
           const maxIndex = (articles as Article[]).length - 1;
           const articleWithMaxIndex = articles[maxIndex];
           const articleId = articleWithMaxIndex.id + 1;
-          article.id = articleId;
-          console.log(article, 'this is form data---');
+          articleObjToCreateUpdate.id = articleId;
+          console.log(articleObjToCreateUpdate, 'this is form data---');
 
           // Create article
-          this.articleService.createArticle(article)
+          this.articleService.create(this.article, articleObjToCreateUpdate) // createArticle(article)
             .subscribe(successCode => {
               this.statusCode = 201; // successCode;
               this.getAllArticles_();
@@ -93,8 +93,10 @@ export class ArticleComponent implements OnInit {
         });
     } else {
       // Handle update article
-      article.id = this.articleIdToUpdate;
-      this.articleService.updateArticle(article)
+      articleObjToCreateUpdate.id = this.articleIdToUpdate;
+      this.articleService.
+      // updateArticle(articleObjToCreateUpdate)
+       update(this.article, articleObjToCreateUpdate)
         .subscribe(successCode => {
           this.statusCode = 200; // successCode;
           this.getAllArticles_();

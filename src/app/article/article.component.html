@@ -1,14 +1,12 @@
-<p>
-  article works! {{displayDateTime}}
-</p>
+<p>article works! {{ displayDateTime }}</p>
 
 <h1 class="text-center">Angular 7 CRUD Demo App</h1>
 
 <h3 class="text-center" *ngIf="articleIdToUpdate; else create">
-  Update Article for Id: {{articleIdToUpdate}}
+  Update Article for Id: {{ articleIdToUpdate }}
 </h3>
 <ng-template #create>
-  <h3 class="text-center"> Create New Article </h3>
+  <h3 class="text-center">Create New Article</h3>
 </ng-template>
 
 <div>
@@ -16,23 +14,39 @@
     <table class="table-striped" style="margin:0 auto;">
       <tr>
         <td>Enter Title</td>
-        <td><input formControlName="title">
-          <label *ngIf="articleForm.get('title').invalid && processValidation" [ngClass]="'error'"> Title is required.
+        <td>
+          <input formControlName="title" />
+          <label
+            *ngIf="articleForm.get('title').invalid && processValidation"
+            [ngClass]="'error'"
+          >
+            Title is required.
           </label>
         </td>
       </tr>
       <tr>
         <td>Enter Category</td>
-        <td><input formControlName="category">
-          <label *ngIf="articleForm.get('category').invalid && processValidation" [ngClass]="'error'"> Category is
-            required. </label>
+        <td>
+          <input formControlName="category" />
+          <label
+            *ngIf="articleForm.get('category').invalid && processValidation"
+            [ngClass]="'error'"
+          >
+            Category is required.
+          </label>
         </td>
       </tr>
       <tr>
         <td colspan="2">
-          <button class="btn btn-default" *ngIf="!articleIdToUpdate">CREATE</button>
-          <button class="btn btn-default" *ngIf="articleIdToUpdate">UPDATE</button>
-          <button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>
+          <button class="btn btn-success" *ngIf="!articleIdToUpdate">
+            CREATE
+          </button>
+          <button class="btn btn-outline-success" *ngIf="articleIdToUpdate">
+            UPDATE
+          </button>
+          <button class="btn btn-outline-dark" (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">
+            Go Back
+          </button>
         </td>
       </tr>
     </table>
@@ -56,26 +70,42 @@
       Internal Server Error.
     </div>
   </div>
-  
+
   <ng-template #processing>
-    <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+    <img *ngIf="requestProcessing" src="assets/images/loading.gif" />
   </ng-template>
 </div>
 
 <h3 class="text-center">Article List</h3>
 <table class="table-striped" style="margin:0 auto;" *ngIf="allArticles">
   <tr>
-    <th> Id</th>
+    <th>Id</th>
     <th>Title</th>
     <th>Category</th>
     <th></th>
     <th></th>
   </tr>
   <tr *ngFor="let article of allArticles">
-    <td>{{article.id}}</td>
-    <td>{{article.title}}</td>
-    <td>{{article.category}}</td>
-    <td><button class="btn btn-default" type="button" (click)="loadArticleToEdit(article.id)">Edit</button> </td>
-    <td><button class="btn btn-default" type="button" (click)="deleteArticle(article.id)">Delete</button></td>
+    <td>{{ article.id }}</td>
+    <td>{{ article.title }}</td>
+    <td>{{ article.category }}</td>
+    <td>
+      <button
+        class="btn btn-outline-info"
+        type="button"
+        (click)="loadArticleToEdit(article.id)"
+      >
+        Edit
+      </button>
+    </td>
+    <td>
+      <button
+        class="btn btn-outline-danger"
+        type="button"
+        (click)="deleteArticle(article.id)"
+      >
+        Delete
+      </button>
+    </td>
   </tr>
 </table>
