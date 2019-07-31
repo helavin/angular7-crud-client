@@ -11,15 +11,15 @@ import {
 import { Observable /*, Subject*/ } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 
-import { Article } from "./_models/Article";
-import { IArticle } from "./_models/Article";
+// import { Article } from "./_models/Article";
+// import { IArticle } from "./_models/Article";
 // import { TmpClass } from './tmpClass';
 import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: "root"
 })
-export class ArticleGenericService {
+export class GenericCRUD_Service {
   // URL for CRUD operations (to server)
   serverUrl = environment.serverUrl; // "http://localhost:3000"; // + '/article';
 
@@ -37,7 +37,7 @@ export class ArticleGenericService {
   //   return this.http.get(this.articleUrl + '/get-articles')
   //     .pipe(
   //       map((data: HttpResponseBase) => {
-  //         return this.extractDataA(data);
+  //         return this.extractingData(data);
   //       }),
   //       catchError(this.handleError)
   //     );
@@ -47,7 +47,14 @@ export class ArticleGenericService {
     // console.log(this.httpOptions.params.get('url'));
     return this.http.get<T | T[]>(
       this.serverUrl + url // "/article/get-articles" // , this.httpOptions
-    );
+    ) //;
+      .pipe(
+        map((data: HttpResponseBase | any) => {
+          return this.extractingData(data);
+        }),
+        catchError(this.handleError)
+      );
+
   }
 
 
@@ -64,11 +71,21 @@ export class ArticleGenericService {
   //   );
   // }
   // CREATE
-  create<T>(model: T | any, objToCreate: T | any, url: string): Observable<T | T[]> {
+  create<T>(model: T | any, operation: string, objToCreate: T | any): Observable<T | T[]> {
+    // console.log( model.tableName );
     return this.http.post<T | T[]>(
-      // `${this.endpoint}/${model.tableName}`, objToCreate
-      this.serverUrl + /*"/article/create-article"*/ url, objToCreate
-      );
+      //this.serverUrl + /*"/article/create-article"*/ url, objToCreate
+      `${this.serverUrl}/${model.tableName}/${operation}`, objToCreate
+    )
+      .pipe(
+        map((success: HttpResponse<any> | any) => {
+          console.log(`Creating object ${model.name}: ${objToCreate.id}. ${objToCreate.title} in generic CRUD service`);
+          console.log("success", (success.status) as string);
+          return success.status;
+        }),
+        catchError(this.handleError)
+      )
+      ;
   }
 
   // Fetch article by id
@@ -77,12 +94,12 @@ export class ArticleGenericService {
   //   // For pass blob in API
   //   return this.http.get(articleUrl).pipe(
   //     map((data: HttpResponseBase) => {
-  //       return this.extractDataA(data);
+  //       return this.extractingData(data);
   //     }),
   //     catchError(this.handleError)
   //   );
   // }
-  readById<T>(model: T | any, objToRead, url: string): Observable<T | T[]>{
+  readById<T>(model: T | any, objToRead, url: string): Observable<T | T[]> {
     return this.http.get<T | T[]>(
       this.serverUrl + url + objToRead // "/article/get-article-by-id?id="
     )
@@ -108,6 +125,7 @@ export class ArticleGenericService {
     //   // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
     //   articleUrl, objToUpdate, this.httpOptions
     // );
+    // console.log(model);
     return this.http.put<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
       this.serverUrl + /*"/article/update-article"*/ url, objToUpdate, this.httpOptions
@@ -128,21 +146,21 @@ export class ArticleGenericService {
     return this.http.delete<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToDelete.id}`
       this.serverUrl + url + objToDelete
-      );
+    );
   }
 
-  private extractDataA(res: any) {
+  private extractingData(res: any) {
     const body = res; // .body; // .json();
     console.log("Extracting datas...");
     console.log(body);
     return body;
   }
-  private extractData(res: HttpResponse<any /*Article*/>) {
-    const body = res; // .body; // .json();
-    console.log("body");
-    console.log(body);
-    return body;
-  }
+  // private extractData(res: HttpResponse<any /*Article*/>) {
+  //   const body = res; // .body; // .json();
+  //   console.log("body");
+  //   console.log(body);
+  //   return body;
+  // }
 
   private handleError(error: HttpResponse<any> | any) {
     console.log("handleError!!! \n:" + error);

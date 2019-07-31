@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { ArticleGenericService } from '../articleGeneric.service';
+import { GenericCRUD_Service } from '../genericCRUD.service';
 import { Article } from '../_models/Article';
 
 // import { Observable } from 'rxjs';
@@ -16,13 +16,13 @@ export class ArticleComponent implements OnInit {
   displayDateTime = new Date().toLocaleString();
 
   // Component properties
-  article: Article;
+  // article: Article;
   allArticles: Article[];
   // tslint:disable-next-line:variable-name
   // allArticles_: any;
   statusCode: number;
   requestProcessing = false;
-  articleIdToUpdate = null;
+  idToUpdate = null;
   processValidation = false;
 
   // Create form
@@ -32,12 +32,12 @@ export class ArticleComponent implements OnInit {
   });
 
   // Create constructor to get service instance
-  constructor(private articleService: ArticleGenericService) {
+  constructor(private genericCRUDService: GenericCRUD_Service) {
   }
 
   // Create ngOnInit() and and load articles
   ngOnInit(): void {
-    this.getAllArticles_();
+    this.getAllObjects();
   }
 
 
@@ -49,14 +49,29 @@ export class ArticleComponent implements OnInit {
   //       errorCode => this.statusCode = errorCode
   //     );
   // }
-  getAllArticles_() {
-    this.articleService.read(this.allArticles, "/article/get-articles")
+  getAllObjects() {
+    // this.generateId(articles as Article[]);
+    this.genericCRUDService.read(this.allArticles, "/articles/get-articles")
       .subscribe(
+
         // res => console.log(res),
         res => this.allArticles = res as Article[],
         errorCode => this.statusCode = errorCode,
-        () => console.log(this.allArticles),
+        () => // console.log(this.generateId(this.allArticles))
+        //console.log(this.allArticles.length + ' Articles read')
+        this.allArticles.forEach(obj => console.log(obj.id))
       );
+  }
+
+  generateId(articles: Article[]) {
+    var num = 1;
+    articles.forEach(obj => {
+      console.log(obj.id);
+      if (obj.id == num.toString()) num++;
+      else return num;
+    }
+    );
+    return num;
   }
 
   // Handle create and update article
@@ -68,39 +83,39 @@ export class ArticleComponent implements OnInit {
 
     // Form is valid, now perform create or update
     this.preProcessConfigurations();
-    const articleObjToCreateUpdate = this.articleForm.value;
-    if (this.articleIdToUpdate === null) {
+    const objectToCreateUpdate = this.articleForm.value;
+    if (this.idToUpdate === null) {
       // Generate article id then create article
-      this.articleService.read(this.allArticles, "/article/get-articles") // getAllArticles()
+      this.genericCRUDService.read(this.allArticles, "/articles/get-articles") // getAllArticles()
         .subscribe(articles => {
 
           // Generate article id
-          const maxIndex = (articles as Article[]).length - 1;
-          const articleWithMaxIndex = articles[maxIndex];
-          const articleId = articleWithMaxIndex.id + 1;
-          articleObjToCreateUpdate.id = articleId;
-          console.log(articleObjToCreateUpdate, 'this is form data---');
+          // const maxIndex = (articles as Article[]).length - 1;
+          // const articleWithMaxIndex = articles[maxIndex];
+          // const articleId = articleWithMaxIndex.id + 1;
+          objectToCreateUpdate.id = this.generateId(articles as Article[]); // articleId;
+          console.log(objectToCreateUpdate, 'this is form data---');
 
           // Create article
-          this.articleService.create(this.article, articleObjToCreateUpdate, "/article/create-article") // createArticle(article)
+          this.genericCRUDService.create(Article/*this.article*/, "/create-article", objectToCreateUpdate) // createArticle(article)
             .subscribe(successCode => {
               this.statusCode = 201; // successCode;
-              this.getAllArticles_();
-              this.backToCreateArticle();
+              this.getAllObjects();
+              this.backToCreateObject();
             },
               errorCode => this.statusCode = errorCode
             );
         });
     } else {
       // Handle update article
-      articleObjToCreateUpdate.id = this.articleIdToUpdate;
-      this.articleService.
+      objectToCreateUpdate.id = this.idToUpdate;
+      this.genericCRUDService.
         // updateArticle(articleObjToCreateUpdate)
-        update(this.article, articleObjToCreateUpdate, "/article/update-article")
+        update(Article, objectToCreateUpdate, "/articles/update-article")
         .subscribe(successCode => {
           this.statusCode = 200; // successCode;
-          this.getAllArticles_();
-          this.backToCreateArticle();
+          this.getAllObjects();
+          this.backToCreateObject();
         },
           errorCode => this.statusCode = errorCode);
     }
@@ -109,14 +124,14 @@ export class ArticleComponent implements OnInit {
   // Load article by id to edit
   loadArticleToEdit(articleId: string) {
     this.preProcessConfigurations();
-    this.articleService.
-      readById(this.article, articleId, "/article/get-article-by-id?id=")
+    this.genericCRUDService.
+      readById(Article, articleId, "/articles/get-article-by-id?id=")
       // getArticleById(articleId)
       .subscribe(article => {
         console.log(article, 'poiuytre');
         // console.log((article as Article).id);
 
-        this.articleIdToUpdate = (article as Article).id
+        this.idToUpdate = (article as Article).id
         this.articleForm.setValue(
           {
             title: (article as Article).title.trim(),
@@ -132,15 +147,15 @@ export class ArticleComponent implements OnInit {
   // Delete article
   deleteArticle(articleId: string) {
     this.preProcessConfigurations();
-    this.articleService.delete(this.article, articleId, "/article/delete-article?id=")
+    this.genericCRUDService.delete(Article, articleId, "/articles/delete-article?id=")
       // deleteArticleById(articleId)
 
       .subscribe(successCode => {
         // this.statusCode = successCode;
         // Expecting success code 204 from server
         this.statusCode = 204;
-        this.getAllArticles_();
-        this.backToCreateArticle();
+        this.getAllObjects();
+        this.backToCreateObject();
       },
         errorCode => this.statusCode = errorCode);
   }
@@ -152,8 +167,8 @@ export class ArticleComponent implements OnInit {
   }
 
   // Go back from update to create
-  backToCreateArticle() {
-    this.articleIdToUpdate = null;
+  backToCreateObject() {
+    this.idToUpdate = null;
     this.articleForm.reset();
     this.processValidation = false;
   }
