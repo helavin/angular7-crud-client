@@ -50,7 +50,7 @@ export class ArticleComponent implements OnInit {
   //     );
   // }
   getAllArticles_() {
-    this.articleService.read(this.allArticles)
+    this.articleService.read(this.allArticles, "/article/get-articles")
       .subscribe(
         // res => console.log(res),
         res => this.allArticles = res as Article[],
@@ -71,7 +71,7 @@ export class ArticleComponent implements OnInit {
     const articleObjToCreateUpdate = this.articleForm.value;
     if (this.articleIdToUpdate === null) {
       // Generate article id then create article
-      this.articleService.read(this.allArticles) // getAllArticles()
+      this.articleService.read(this.allArticles, "/article/get-articles") // getAllArticles()
         .subscribe(articles => {
 
           // Generate article id
@@ -82,7 +82,7 @@ export class ArticleComponent implements OnInit {
           console.log(articleObjToCreateUpdate, 'this is form data---');
 
           // Create article
-          this.articleService.create(this.article, articleObjToCreateUpdate) // createArticle(article)
+          this.articleService.create(this.article, articleObjToCreateUpdate, "/article/create-article") // createArticle(article)
             .subscribe(successCode => {
               this.statusCode = 201; // successCode;
               this.getAllArticles_();
@@ -95,8 +95,8 @@ export class ArticleComponent implements OnInit {
       // Handle update article
       articleObjToCreateUpdate.id = this.articleIdToUpdate;
       this.articleService.
-      // updateArticle(articleObjToCreateUpdate)
-       update(this.article, articleObjToCreateUpdate)
+        // updateArticle(articleObjToCreateUpdate)
+        update(this.article, articleObjToCreateUpdate, "/article/update-article")
         .subscribe(successCode => {
           this.statusCode = 200; // successCode;
           this.getAllArticles_();
@@ -109,11 +109,20 @@ export class ArticleComponent implements OnInit {
   // Load article by id to edit
   loadArticleToEdit(articleId: string) {
     this.preProcessConfigurations();
-    this.articleService.getArticleById(articleId)
+    this.articleService.
+      readById(this.article, articleId, "/article/get-article-by-id?id=")
+      // getArticleById(articleId)
       .subscribe(article => {
         console.log(article, 'poiuytre');
-        this.articleIdToUpdate = article.id;
-        this.articleForm.setValue({ title: article.title, category: article.category });
+        // console.log((article as Article).id);
+
+        this.articleIdToUpdate = (article as Article).id
+        this.articleForm.setValue(
+          {
+            title: (article as Article).title.trim(),
+            category: (article as Article).category.trim()
+          }
+        );
         this.processValidation = true;
         this.requestProcessing = false;
       },
@@ -123,7 +132,9 @@ export class ArticleComponent implements OnInit {
   // Delete article
   deleteArticle(articleId: string) {
     this.preProcessConfigurations();
-    this.articleService.deleteArticleById(articleId)
+    this.articleService.delete(this.article, articleId, "/article/delete-article?id=")
+      // deleteArticleById(articleId)
+
       .subscribe(successCode => {
         // this.statusCode = successCode;
         // Expecting success code 204 from server

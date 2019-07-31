@@ -43,10 +43,10 @@ export class ArticleGenericService {
   //     );
   // }
   // READ
-  read<T>(model: T | any): Observable<T | T[]> {
+  read<T>(model: T | any, url: string): Observable<T | T[]> {
     // console.log(this.httpOptions.params.get('url'));
     return this.http.get<T | T[]>(
-      this.serverUrl + "/article/get-articles" // , this.httpOptions
+      this.serverUrl + url // "/article/get-articles" // , this.httpOptions
     );
   }
 
@@ -64,24 +64,31 @@ export class ArticleGenericService {
   //   );
   // }
   // CREATE
-  create<T>(model: T | any, objToCreate: T | any): Observable<T | T[]> {
+  create<T>(model: T | any, objToCreate: T | any, url: string): Observable<T | T[]> {
     return this.http.post<T | T[]>(
       // `${this.endpoint}/${model.tableName}`, objToCreate
-      this.serverUrl + "/article/create-article", objToCreate
+      this.serverUrl + /*"/article/create-article"*/ url, objToCreate
       );
   }
 
   // Fetch article by id
-  getArticleById(articleId: string): Observable<Article> {
-    const articleUrl = this.serverUrl + "/article/get-article-by-id?id=" + articleId;
-    // For pass blob in API
-    return this.http.get(articleUrl).pipe(
-      map((data: HttpResponseBase) => {
-        return this.extractDataA(data);
-      }),
-      catchError(this.handleError)
-    );
+  // getArticleById(articleId: string): Observable<Article> {
+  //   const articleUrl = this.serverUrl + "/article/get-article-by-id?id=" + articleId;
+  //   // For pass blob in API
+  //   return this.http.get(articleUrl).pipe(
+  //     map((data: HttpResponseBase) => {
+  //       return this.extractDataA(data);
+  //     }),
+  //     catchError(this.handleError)
+  //   );
+  // }
+  readById<T>(model: T | any, objToRead, url: string): Observable<T | T[]>{
+    return this.http.get<T | T[]>(
+      this.serverUrl + url + objToRead // "/article/get-article-by-id?id="
+    )
   }
+
+
 
   // Update article
   // updateArticle(article: Article): Observable<number> {
@@ -96,25 +103,32 @@ export class ArticleGenericService {
   //   );
   // }
   // UPDATE
-  update<T>(model: T | any, objToUpdate: T | any): Observable<T | T[]> {
+  update<T>(model: T | any, objToUpdate: T | any, url: string): Observable<T | T[]> {
     // return this.http.patch<T | T[]>(
     //   // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
     //   articleUrl, objToUpdate, this.httpOptions
     // );
     return this.http.put<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
-      this.serverUrl + "/article/update-article", objToUpdate, this.httpOptions
+      this.serverUrl + /*"/article/update-article"*/ url, objToUpdate, this.httpOptions
     );
   }
 
   // Delete article
-  deleteArticleById(articleId: string): Observable<number> {
-    const articleUrl = this.serverUrl + "/article/delete-article?id=" + articleId;
-    return this.http.delete(articleUrl).pipe(
-      map((success: any /*HttpResponse<any>*/) => {
-        return success.status;
-      })
-    );
+  // deleteArticleById(articleId: string): Observable<number> {
+  //   const articleUrl = this.serverUrl + "/article/delete-article?id=" + articleId;
+  //   return this.http.delete(articleUrl).pipe(
+  //     map((success: any /*HttpResponse<any>*/) => {
+  //       return success.status;
+  //     })
+  //   );
+  // }
+  // DELETE
+  delete<T>(model: T | any, objToDelete, url: string): Observable<T | T[]> {
+    return this.http.delete<T | T[]>(
+      // `${this.endpoint}/${model.tableName}/${objToDelete.id}`
+      this.serverUrl + url + objToDelete
+      );
   }
 
   private extractDataA(res: any) {
