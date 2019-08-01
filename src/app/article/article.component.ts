@@ -51,7 +51,7 @@ export class ArticleComponent implements OnInit {
   // }
   getAllObjects() {
     // this.generateId(articles as Article[]);
-    this.genericCRUDService.read(this.allArticles, "/articles/get-articles")
+    this.genericCRUDService.read(/*this.allArticles*/ Article, "/get-articles")
       .subscribe(
 
         // res => console.log(res),
@@ -86,7 +86,7 @@ export class ArticleComponent implements OnInit {
     const objectToCreateUpdate = this.articleForm.value;
     if (this.idToUpdate === null) {
       // Generate article id then create article
-      this.genericCRUDService.read(this.allArticles, "/articles/get-articles") // getAllArticles()
+      this.genericCRUDService.read(/*this.allArticles*/ Article, "/get-articles") // getAllArticles()
         .subscribe(articles => {
 
           // Generate article id
@@ -111,7 +111,7 @@ export class ArticleComponent implements OnInit {
       objectToCreateUpdate.id = this.idToUpdate;
       this.genericCRUDService.
         // updateArticle(articleObjToCreateUpdate)
-        update(Article, objectToCreateUpdate, "/articles/update-article")
+        update(Article, "/update-article", objectToCreateUpdate)
         .subscribe(successCode => {
           this.statusCode = 200; // successCode;
           this.getAllObjects();
@@ -125,7 +125,7 @@ export class ArticleComponent implements OnInit {
   loadArticleToEdit(articleId: string) {
     this.preProcessConfigurations();
     this.genericCRUDService.
-      readById(Article, articleId, "/articles/get-article-by-id?id=")
+      readById(Article, "/get-article-by-id?id=", articleId)
       // getArticleById(articleId)
       .subscribe(article => {
         console.log(article, 'poiuytre');
@@ -147,7 +147,7 @@ export class ArticleComponent implements OnInit {
   // Delete article
   deleteArticle(articleId: string) {
     this.preProcessConfigurations();
-    this.genericCRUDService.delete(Article, articleId, "/articles/delete-article?id=")
+    this.genericCRUDService.delete(Article, "/delete-article?id=", articleId)
       // deleteArticleById(articleId)
 
       .subscribe(successCode => {

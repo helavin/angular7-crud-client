@@ -2,8 +2,8 @@
 
 <h1 class="text-center">Angular 7 CRUD Demo App</h1>
 
-<h3 class="text-center" *ngIf="articleIdToUpdate; else create">
-  Update Article for Id: {{ articleIdToUpdate }}
+<h3 class="text-center" *ngIf="idToUpdate; else create">
+  Update Article for Id: {{ idToUpdate }}
 </h3>
 <ng-template #create>
   <h3 class="text-center">Create New Article</h3>
@@ -38,13 +38,13 @@
       </tr>
       <tr>
         <td colspan="2">
-          <button class="btn btn-success" *ngIf="!articleIdToUpdate">
+          <button class="btn btn-success" *ngIf="!idToUpdate">
             CREATE
           </button>
-          <button class="btn btn-outline-success" *ngIf="articleIdToUpdate">
+          <button class="btn btn-outline-success" *ngIf="idToUpdate">
             UPDATE
           </button>
-          <button class="btn btn-outline-dark" (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">
+          <button class="btn btn-outline-dark" (click)="backToCreateArticle()" *ngIf="idToUpdate">
             Go Back
           </button>
         </td>

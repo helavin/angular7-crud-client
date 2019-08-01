@@ -43,10 +43,10 @@ export class GenericCRUD_Service {
   //     );
   // }
   // READ
-  read<T>(model: T | any, url: string): Observable<T | T[]> {
-    // console.log(this.httpOptions.params.get('url'));
+  read<T>(model: T | any, operation: string): Observable<T | T[]> {
+    //console.log(this.httpOptions.params.get('url'));
     return this.http.get<T | T[]>(
-      this.serverUrl + url // "/article/get-articles" // , this.httpOptions
+      `${this.serverUrl}/${model.tableName}/${operation}`
     ) //;
       .pipe(
         map((data: HttpResponseBase | any) => {
@@ -99,9 +99,10 @@ export class GenericCRUD_Service {
   //     catchError(this.handleError)
   //   );
   // }
-  readById<T>(model: T | any, objToRead, url: string): Observable<T | T[]> {
+  readById<T>(model: T | any, operation: string, objToRead: T | any): Observable<T | T[]> {
     return this.http.get<T | T[]>(
-      this.serverUrl + url + objToRead // "/article/get-article-by-id?id="
+      //this.serverUrl + operation + objToRead // "/article/get-article-by-id?id="
+      `${this.serverUrl}/${model.tableName}/${operation}${objToRead}`
     )
   }
 
@@ -120,15 +121,15 @@ export class GenericCRUD_Service {
   //   );
   // }
   // UPDATE
-  update<T>(model: T | any, objToUpdate: T | any, url: string): Observable<T | T[]> {
+  update<T>(model: T | any, operation: string, objToUpdate: T | any): Observable<T | T[]> {
     // return this.http.patch<T | T[]>(
     //   // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
     //   articleUrl, objToUpdate, this.httpOptions
     // );
-    // console.log(model);
     return this.http.put<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
-      this.serverUrl + /*"/article/update-article"*/ url, objToUpdate, this.httpOptions
+      //this.serverUrl + /*"/article/update-article"*/ url, objToUpdate, this.httpOptions
+      `${this.serverUrl}/${model.tableName}/${operation}`, objToUpdate, this.httpOptions
     );
   }
 
@@ -142,10 +143,11 @@ export class GenericCRUD_Service {
   //   );
   // }
   // DELETE
-  delete<T>(model: T | any, objToDelete, url: string): Observable<T | T[]> {
+  delete<T>(model: T | any, operation: string, objToDelete: T | any): Observable<T | T[]> {
     return this.http.delete<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToDelete.id}`
-      this.serverUrl + url + objToDelete
+      // this.serverUrl + url + objToDelete
+      `${this.serverUrl}/${model.tableName}/${operation}${objToDelete}`
     );
   }
 

@@ -14,17 +14,21 @@ table,
 th,
 td {
   border: 1px solid black;
+  padding: 0px 5px;
   font-size: 17px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 input {
   width: 225px;
-  margin: 8px 0;
+  padding: 0px 3px;
+  margin: 8px 5px;
   background-color: #dfdfdf;
   font-size: 17px;
 }
 button {
   background-color: #008cba;
   color: white;
+  margin: 5px;
 }
 .error {
   color: red;
