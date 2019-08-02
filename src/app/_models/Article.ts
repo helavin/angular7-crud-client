@@ -4,7 +4,7 @@
 // }
 
 // new class
-import { IDataBaseObj } from './idata-base-obj';
+import { IDataBaseObj } from './_idata-base-obj';
 import { TableMap } from '../shared/table-map';
 
 export interface IArticle extends IDataBaseObj {
