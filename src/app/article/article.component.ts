@@ -53,20 +53,19 @@ export class ArticleComponent implements OnInit {
     // this.generateId(articles as Article[]);
     this.genericCRUDService.read(/*this.allArticles*/ Article, "/get-articles")
       .subscribe(
-
         // res => console.log(res),
         res => this.allArticles = res as Article[],
         errorCode => this.statusCode = errorCode,
-        () => // console.log(this.generateId(this.allArticles))
+        () => console.log(`Next empty id is: ${this.generateId(this.allArticles)}`)
         //console.log(this.allArticles.length + ' Articles read')
-        this.allArticles.forEach(obj => console.log(obj.id))
+        //this.allArticles.forEach(obj => console.log(obj.id))
       );
   }
 
   generateId(articles: Article[]) {
     var num = 1;
     articles.forEach(obj => {
-      console.log(obj.id);
+      // console.log(obj.id);
       if (obj.id == num.toString()) num++;
       else return num;
     }
@@ -109,9 +108,8 @@ export class ArticleComponent implements OnInit {
     } else {
       // Handle update article
       objectToCreateUpdate.id = this.idToUpdate;
-      this.genericCRUDService.
+      this.genericCRUDService.update(Article, "/update-article", objectToCreateUpdate)
         // updateArticle(articleObjToCreateUpdate)
-        update(Article, "/update-article", objectToCreateUpdate)
         .subscribe(successCode => {
           this.statusCode = 200; // successCode;
           this.getAllObjects();

@@ -75,7 +75,7 @@ export class GenericCRUD_Service {
     // console.log( model.tableName );
     return this.http.post<T | T[]>(
       //this.serverUrl + /*"/article/create-article"*/ url, objToCreate
-      `${this.serverUrl}/${model.tableName}/${operation}`, objToCreate
+      `${this.serverUrl}/${model.tableName}/${operation}`, objToCreate, this.httpOptions
     )
       .pipe(
         map((success: HttpResponse<any> | any) => {
@@ -129,7 +129,7 @@ export class GenericCRUD_Service {
     return this.http.put<T | T[]>(
       // `${this.endpoint}/${model.tableName}/${objToUpdate.id}`, objToUpdate}
       //this.serverUrl + /*"/article/update-article"*/ url, objToUpdate, this.httpOptions
-      `${this.serverUrl}/${model.tableName}/${operation}`, objToUpdate, this.httpOptions
+      `${this.serverUrl}/${model.tableName}/${operation}`, objToUpdate//, this.httpOptions
     );
   }
 
