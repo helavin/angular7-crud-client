@@ -1,4 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+/*
+deeppurple-amber.css
+indigo-pink.css
+pink-bluegrey.css
+purple-green.css
+*/
+
 h1 {
   font-size: 2em;
   margin: 20px 0 0 0;

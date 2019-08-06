@@ -51,4 +51,7 @@ git remote add origin https://github.com/helavin/angular7-crud-client.git
 git push -u origin master
 
 
+https://github.com/angular/angular-cli/wiki
+
+
 hello from home
